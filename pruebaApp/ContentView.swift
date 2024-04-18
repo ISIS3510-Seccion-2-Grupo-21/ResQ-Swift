@@ -9,8 +9,10 @@ import SwiftUI
 
 struct ContentView: View
 {
+    
     @State private var isShowingDetailView = false
     @State var isClicked : Bool = false
+    @ObservedObject var monitor = NetworkMonitor()
     let image = Image("resQLogo")
     var body: some View
     {
@@ -39,21 +41,29 @@ struct ContentView: View
                 NavigationLink(destination: SlideintoScreenView(), isActive: $isShowingDetailView) { EmptyView() }
                     .hidden()
                 
-                Button(action: {
-                    isShowingDetailView = true
                 
-                }) {
-                    Text("Get Started")
-                        .foregroundColor(Color("LighterGreen"))
-                        .bold()
-                        .frame(width: 200, height: 50)
-                        .background(
-                            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                .fill(.white)
-                        )
-                        .padding(.top)
-                }
-                .offset(y: 120)
+                
+                if monitor.isConnected {
+                                        Button(action: {
+                                            isShowingDetailView = true
+                                            isClicked = true // You might use isClicked for some other logic
+                                        }) {
+                                            Text("Get Started")
+                                                .foregroundColor(Color("LighterGreen"))
+                                                .bold()
+                                                .frame(width: 200, height: 50)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                                        .fill(.white)
+                                                )
+                                        }
+                                        .padding(.top, 20)
+                                    } else {
+                                        Text("No internet connection")
+                                            .foregroundColor(.white)
+                                            .font(.headline)
+                                            .padding(.top, 20)
+                                    }
 
                     
                     

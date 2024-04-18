@@ -199,7 +199,8 @@ struct SignInView: View {
                 }
                 .padding()
                 
-                if let errorMessage = errorMessage {
+                if
+                    let errorMessage = errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
                 }
