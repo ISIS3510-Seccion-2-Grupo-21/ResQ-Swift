@@ -10,50 +10,60 @@ import SwiftUI
 struct BotView: View {
     
     @StateObject private var viewModel = BotViewModel()
+    @ObservedObject var monitor = NetworkMonitor()
     
     var body: some View {
         VStack{
-            ScrollViewReader{ proxy in
-                ScrollView{
-                    LazyVStack(spacing: 16){
-                        ForEach(viewModel.chatMessages){ message in
-                            messageView(message)
-                        }
-                        Color.clear
-                            .frame(height: 1)
-                            .id("bottom")
-                        
-                    }
-                }
-                .onReceive(viewModel.$chatMessages.throttle(for: 0.5, scheduler: RunLoop.main, latest: true)){ chatMessages in
-                    guard !chatMessages.isEmpty else { return }
-                    withAnimation{
-                        proxy.scrollTo("bottom")
-                    }
-                }
-            }
-            HStack{
-                TextField("Message ...", text: $viewModel.message, axis:.vertical)
-                    .textFieldStyle(.roundedBorder)
-                if viewModel.isWaitingForResponse{
-                    ProgressView()
-                        .padding()
-                } else {
-                    Button {
-                 
-                        sendMessage()
-                        
-                    } label: {
-                        Image(systemName: "paperplane.fill")
-                            .foregroundColor(Color("LighterGreen"))
-                    }
-                    .font(.system(size: 26))
-                    .padding(.horizontal, 10)
-                }
             
-                
+            if monitor.isConnected{
+                ScrollViewReader{ proxy in
+                    ScrollView{
+                        LazyVStack(spacing: 16){
+                            ForEach(viewModel.chatMessages){ message in
+                                messageView(message)
+                            }
+                            Color.clear
+                                .frame(height: 1)
+                                .id("bottom")
+                            
+                        }
+                    }
+                    .onReceive(viewModel.$chatMessages.throttle(for: 0.5, scheduler: RunLoop.main, latest: true)){ chatMessages in
+                        guard !chatMessages.isEmpty else { return }
+                        withAnimation{
+                            proxy.scrollTo("bottom")
+                        }
+                    }
+                }
+                HStack{
+                    TextField("Message ...", text: $viewModel.message, axis:.vertical)
+                        .textFieldStyle(.roundedBorder)
+                    if viewModel.isWaitingForResponse{
+                        ProgressView()
+                            .padding()
+                    } else {
+                        Button {
+                            
+                            sendMessage()
+                            
+                        } label: {
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(Color("LighterGreen"))
+                        }
+                        .font(.system(size: 26))
+                        .padding(.horizontal, 10)
+                    }
+                    
+                    
+                }
+                .padding()
             }
-            .padding()
+            else{
+                    Text("No internet Connection")
+                        .foregroundColor(.green)
+                        .font(.title)
+                        .padding(.top, 20)
+            }
         }
         
         

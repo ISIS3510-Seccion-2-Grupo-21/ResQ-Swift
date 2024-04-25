@@ -12,7 +12,6 @@ struct ContentView: View
     
     @State private var isShowingDetailView = false
     @State var isClicked : Bool = false
-    @ObservedObject var monitor = NetworkMonitor()
     let image = Image("resQLogo")
     var body: some View
     {
@@ -43,7 +42,7 @@ struct ContentView: View
                 
                 
                 
-                if monitor.isConnected {
+            
                                         Button(action: {
                                             isShowingDetailView = true
                                             isClicked = true // You might use isClicked for some other logic
@@ -58,12 +57,7 @@ struct ContentView: View
                                                 )
                                         }
                                         .padding(.top, 20)
-                                    } else {
-                                        Text("No internet connection")
-                                            .foregroundColor(.white)
-                                            .font(.headline)
-                                            .padding(.top, 20)
-                                    }
+                                   
 
                     
                     

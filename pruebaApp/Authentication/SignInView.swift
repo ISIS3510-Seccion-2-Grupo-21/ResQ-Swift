@@ -10,12 +10,14 @@ import Firebase
 import FirebaseAuth
 import FirebaseStorage
 import FirebaseFirestore
+import Foundation
 
 
 class FirebaseManager: NSObject {
     let auth: Auth
     let storage: Storage
     let firestore: Firestore
+    
     
     static let shared = FirebaseManager()
     
